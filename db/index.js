@@ -33,6 +33,7 @@ function sync(force=false, retries=0, maxRetries=5) {
       console.error(chalk.red(`*************************************`))
       return
     }
+    
     // Otherwise, do this autocreate nonsense
     console.log(`${retries ? `[retry ${retries}]` : ''} Creating database ${name}...`)
     return new Promise((resolve, reject) =>
