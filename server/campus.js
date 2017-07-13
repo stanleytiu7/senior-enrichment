@@ -10,71 +10,104 @@ const {
 // I know this because we automatically send index.html for all requests that don't make sense in our backend.
 // Ideally you would have something to handle this, so if you have time try that out!
 
-//easy
+//easy DONE----------
 router.get('/', (req, res, next) => {
   Campus.findAll()
-    .then(results => res.send(results))
-    .catch(next);
-});
-// easy
-router.get('/:campusId', (req, res, next) => {
-  Campus.findOne({
-      where: {
-        id: req.params.campusId
-      }
-    })
-    .then(results => res.send(results))
+    .then(results => res.json(results))
     .catch(next);
 });
 
+// easy DONE -------------
+router.get('/:campusId', (req, res, next) => {
+  Campus.findById(req.params.campusId)
+    .then(results => {
+      if (results) res.json(results)
+      else res.status(404).send('Not Found')
+    })
+    .catch(next);
+});
+
+// WIPPPP
 router.get('/:campusId/students', (req, res, next) => {
   Campus.findOne({
-      where: {
-        id: req.params.campusId
-      }
-    })
-    .then(result => {
+    where: {
+      id: req.params.campusId
+    }
+  })
+  .then(result => {
       Student.findall({
         where: {
           campus: result.id
         }
       })
     })
-    .then(results => res.send(results))
-    .catch(next)
+    .then(results => res.json(results))
+  .catch(next)
 });
 
+// WIPPPPP
 router.get('/:campusId/students/:id', (req, res, next) => {
-  Campus.findOne({
+  Campus.findById(req.params.campusId)
+    .then(results => res.json(results))
+    .catch(next);
+});
+
+
+// DONE --------------
+router.post('/', (req, res, next) => {
+  Campus.findOrCreate({
       where: {
-        id: req.params.campusId
+        name: req.body.name,
+        image: req.body.image
       }
     })
-    .then(results => res.send(results))
-    .catch(next);
-});
-
-router.post('/', (req, res, next) => {
-  const post = {};
-  Campus.post(post)
-    .then(results => res.send(results))
-    .catch(next);
-});
-
-router.put('/', (req, res, next) => {
-  Campus.update({
-      where: {}
+    .then(results => {
+      console.log(results[0], results[1]);
+      if (results[1]) res.json(results[0])
+      else res.send(results[0].name + ' already exists!')
     })
-    .then(results => res.send(results))
     .catch(next);
 });
 
-router.delete('/', (req, res, next) => {
-  Campus.destroy({
-      where: {}
+// DONE ----
+router.put('/:id', (req, res, next) => {
+  Campus.update(
+      req.body, {
+        where: {
+          id: req.params.id
+        }
+      }
+    )
+    .then(results => {
+      if (results[0]) res.json('updated')
+      else res.send('failed to update')
     })
-    .then(results => res.send(results))
-    .catch(next);
+
+  .catch(next);
+});
+
+
+// DONE ------------
+router.delete('/:id', (req, res, next) => {
+  //find first so if it doesnt exist we can do something
+  Campus.findOne({
+    where: {
+      id: req.params.id
+    }
+  })
+
+  .then(campus => {
+    if (campus) {
+      return campus.destroy()
+        .then(() => {
+          res.send('destroyed entry with id: ' + campus.id)
+        })
+    } else {
+      res.status(404).send('Not Found!!')
+    }
+  })
+
+  .catch(next);
 });
 
 module.exports = router;

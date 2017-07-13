@@ -1,7 +1,6 @@
 import React from 'react';
 
-export function navbar() {
-  return (
+const  Navbar = () => (
   <nav>
     <div className="nav-wrapper">
       <a href="#" className="brand-logo">Logo</a>
@@ -13,4 +12,5 @@ export function navbar() {
     </div>
   </nav>
   )
-}
+
+export default Navbar;

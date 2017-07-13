@@ -1,22 +1,15 @@
-'use strict'
-import React from 'react'
-import {
-  render
-} from 'react-dom'
+import React from 'react';
+import ReactDOM from 'react-dom';
 import {
   Provider
-} from 'react-redux'
-
+} from 'react-redux';
+import Routes from './routes';
 import store from './store'
-import navbar from './components/navbar'
-import Root from './components/Root'
 
-render(
+import Home from './components/Home';
+ReactDOM.render(
   <Provider store={store}>
-    <div>
-      <navbar />
-      <Root />
-    </div>
+    <Routes />
   </Provider>,
   document.getElementById('main')
-)
+);
