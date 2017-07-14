@@ -7,7 +7,7 @@
     "test": "mocha **/*.test.js *.test.js",
     "build": "webpack",
     "build-watch": "webpack -d --watch",
-    "start": "nodemon server/start.js",
+    "start": "nodemon server/index.js",
     "flow": "flow"
   },
   "keywords": [
@@ -27,6 +27,7 @@
     "pg-native": "^1.10.0",
     "react": "^15.6.1",
     "react-dom": "^15.3.2",
+    "react-materialize": "^1.0.4",
     "react-redux": "^4.4.5",
     "react-router": "^4.1.1",
     "react-router-dom": "^4.1.1",

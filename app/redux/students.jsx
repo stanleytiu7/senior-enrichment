@@ -28,7 +28,7 @@ export default function reducer(students = [], action) {
       return action.students;
 
     case CREATE:
-      return [action.student, ...students];
+      return [...students, action.student ];
 
     case REMOVE:
       return students.filter(student => student.id !== action.id);
@@ -36,17 +36,23 @@ export default function reducer(students = [], action) {
     case UPDATE:
       return students.map(student => (action.student.id === student.id ? action.student : student));
 
-
     default:
       return students;
-
   }
 }
 
 export const fetchStudents = () => dispatch => {
   axios.get('/api/students')
     .then(res => {
-       console.log('in redux/students, all the students: ', res.data);
+      console.log('in redux/students, all the students: ', res.data);
+      dispatch(init(res.data))
+    });
+};
+
+export const fetchStudent = (id) => dispatch => {
+  axios.get(`/api/students/${id}`)
+  .then(res => {
+    console.log('get one!!', res)
       dispatch(init(res.data))
     });
 };
@@ -60,7 +66,10 @@ export const removeStudent = id => dispatch => {
 
 export const addStudent = student => dispatch => {
   axios.post('/api/students', student)
-    .then(res => dispatch(create(res.data)))
+    .then(res => {
+      console.log('here');
+      dispatch(create(res.data))
+    })
     .catch(err => console.error(`Creating student: ${student} unsuccesful`, err));
 };
 

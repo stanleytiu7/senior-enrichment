@@ -1,45 +1,75 @@
-'use strict'
 const router = require('express').Router();
 //const db = require('../db');
 const {
+  Campus,
   Student
 } = require('../db/models/');
 
 // If you aren't getting to this object, but rather the index.html (something with a joke) your path is wrong.
 // I know this because we automatically send index.html for all requests that don't make sense in our backend.
 // Ideally you would have something to handle this, so if you have time try that out!
-// DONE -------
+
+//easy DONE----------
 router.get('/', (req, res, next) => {
-  Student.findAll()
+  Campus.findAll()
     .then(results => res.json(results))
     .catch(next);
 });
 
-router.get('/:id', (req, res, next) => {
-  Student.findById(req.params.id)
+// easy DONE -------------
+router.get('/:campusId', (req, res, next) => {
+  Campus.findById(req.params.campusId)
+    .then(results => {
+      if (results) res.json(results)
+      else res.status(404).send('Not Found')
+    })
+    .catch(next);
+});
+
+// WIPPPP
+router.get('/:campusId/students', (req, res, next) => {
+  Campus.findOne({
+    where: {
+      id: req.params.campusId
+    }
+  })
+  .then(result => {
+      Student.findall({
+        where: {
+          campus: result.id
+        }
+      })
+    })
+    .then(results => res.json(results))
+  .catch(next)
+});
+
+// WIPPPPP
+router.get('/:campusId/students/:id', (req, res, next) => {
+  Campus.findById(req.params.campusId)
     .then(results => res.json(results))
     .catch(next);
 });
 
-// DONE  -------
+
+// DONE --------------
 router.post('/', (req, res, next) => {
-  Student.findOrCreate({
+  Campus.findOrCreate({
       where: {
-        firstName: req.body.firstName,
-        lastName: req.body.lastName,
-        email: req.body.email
+        name: req.body.name,
+        image: req.body.image
       }
     })
     .then(results => {
-      if (results[1]) res.json(fullName);
-      else res.send(results[0].fullName + ' already exists!')
+      if (results[1]) res.json(results[0])
+      else res.send(results[0].name + ' already exists!')
     })
     .catch(next);
 });
 
-//Done ---------
+// DONE ----
 router.put('/:id', (req, res, next) => {
-  Student.update(
+  Campus.update(
       req.body, {
         where: {
           id: req.params.id
@@ -47,27 +77,28 @@ router.put('/:id', (req, res, next) => {
       }
     )
     .then(results => {
-      if (results[0]) res.send('updated')
+      if (results[0]) res.json('updated')
       else res.send('failed to update')
     })
 
   .catch(next);
 });
 
-// DONE --------
+
+// DONE ------------
 router.delete('/:id', (req, res, next) => {
   //find first so if it doesnt exist we can do something
-  Student.findOne({
+  Campus.findOne({
     where: {
       id: req.params.id
     }
   })
 
-  .then(student => {
-    if (student) {
-      return student.destroy()
+  .then(campus => {
+    if (campus) {
+      return campus.destroy()
         .then(() => {
-          res.send('destroyed entry with id: ' + student.id)
+          res.send('destroyed entry with id: ' + campus.id)
         })
     } else {
       res.status(404).send('Not Found!!')
@@ -76,4 +107,5 @@ router.delete('/:id', (req, res, next) => {
 
   .catch(next);
 });
+
 module.exports = router;

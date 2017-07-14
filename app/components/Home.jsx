@@ -1,9 +1,13 @@
 import React from 'react';
+import {
+  Link
+} from 'react-router-dom';
 
-const Home = () => (
-  <div>
-    <div className="col s12"> My Home </div>
-  </div>
-)
-
-export default Home;
+export default function Home() {
+  return (
+    <div>
+      <Link to="/campuses/"><button>Campuses</button></Link>
+      <Link to="/students/"><button>Students</button></Link>
+    </div>
+  )
+}

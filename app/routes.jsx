@@ -10,8 +10,17 @@ import {
   Switch
 } from 'react-router-dom';
 import history from './history';
+
 import Root from './components/Root';
 import Home from './components/Home';
+import StudentsList from './components/StudentsList';
+import CampusesList from './components/CampusesList';
+import FilteredStudentsList from './components/FilteredStudentsList';
+import StudentProfile from './components/StudentProfile';
+import Add from './components/Add';
+import FilteredAdd from './components/FilteredAdd';
+
+
 import {
   fetchCampuses
 } from './redux/campuses';
@@ -22,24 +31,32 @@ import {
 class Routes extends Component {
 
   componentDidMount() {
-    this.props.fetchInitialData();
+    if (!this.props) this.props.fetchInitialData();
   }
+
   render() {
     return (
-      <Router history={history}>
-        <Switch>
-          <Root>
+      <div>
+        <Router history={history}>
+          <Switch>
+            <Route path="/campuses/:id/add" component={FilteredAdd} />
+            <Route exact path="/campuses/:id" component={FilteredStudentsList} />
+            <Route exact path="/students/add" component={Add} />
+
+            <Route exact path="/students/:id" component={StudentProfile} />
+            <Route exact path="/campuses" component={CampusesList} />
+            <Route exact path="/students" component={StudentsList} />
             <Route exact path="/" component={Home} />
-          </Root>
-        </Switch>
-      </Router>
+          </Switch>
+        </Router>
+      </div>
     );
   }
 }
 
 //===========================================
 
-const mapProps = (state) => ({
+const mapProps = state => ({
   students: state.students,
   campuses: state.campuses
 });

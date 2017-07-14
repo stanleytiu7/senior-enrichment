@@ -56,7 +56,7 @@
    axios.get('/api/campuses')
      .then(res => {
        console.log('in redux/campuses, all the campuses: ', res.data);
-         dispatch(init(res.data))
+       dispatch(init(res.data))
      })
      .catch(err => console.error('Fetching campuses unsuccessful', err));
  };
